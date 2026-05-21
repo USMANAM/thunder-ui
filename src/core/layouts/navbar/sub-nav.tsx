@@ -60,7 +60,7 @@ export function SubNav({ navMenu }: { navMenu: TNav[] }) {
           viewTransition: true,
         })
       }}
-      className="no-scrollbar overflow-x-auto mask-r-from-98%"
+      className="no-scrollbar overflow-x-auto scroll-mask-x-from-90%"
     >
       <TabsList variant="line">
         {navMenu.map((nav) => (

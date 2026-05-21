@@ -62,7 +62,7 @@ const router = createBrowserRouter(
 )
 
 export function App() {
-  const currentUri = resolveUrl().toString();
+  const currentUri = resolveUrl().toString()
   const children = <RouterProvider router={router} />
 
   return (

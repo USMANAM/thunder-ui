@@ -67,7 +67,7 @@ export function DataTable({ table }: DataTableProps) {
                   return (
                     <TableHead
                       key={header.id}
-                      className="relative truncate data-pinned:bg-background/90 data-pinned:backdrop-blur-xs"
+                      className="relative truncate data-pinned:bg-background/90 data-pinned:backdrop-blur-xs py-0"
                       data-last-col={
                         isLastLeftPinned
                           ? "left"
@@ -222,7 +222,7 @@ export function DataTable({ table }: DataTableProps) {
                   return (
                     <TableCell
                       key={cell.id}
-                      className="group relative truncate border-b-2! group-data-[state=selected]:border-background py-4 data-pinned:border-primary! data-pinned:bg-background/90 data-pinned:backdrop-blur-xs"
+                      className="group relative truncate border-b! group-data-[state=selected]:border-background py-0.5 data-pinned:border-primary! data-pinned:bg-background/90 data-pinned:backdrop-blur-xs"
                       data-last-col={
                         isLastLeftPinned
                           ? "left"

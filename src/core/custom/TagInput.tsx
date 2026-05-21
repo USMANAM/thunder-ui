@@ -1,8 +1,10 @@
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { IconX } from "@tabler/icons-react"
+import { IconTrash, IconX } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import React from "react"
+import { InputGroup } from "@/components/ui/input-group"
+import { cn } from "@/lib/utils"
 
 export type TTagValue = "text" | "number" | "url" | "email" | "phone"
 
@@ -35,41 +37,9 @@ export function TagInput() {
   const { values, onValueChange, ...inputProps } = useTag()
 
   return (
-    <Input
-      {...inputProps}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault()
-
-          if (!e.currentTarget.checkValidity()) {
-            e.currentTarget.reportValidity()
-
-            return
-          }
-
-          const value = (
-            inputProps.type === "number"
-              ? e.currentTarget.valueAsNumber
-              : e.currentTarget.value
-          ) as TTagValue
-          onValueChange?.([value, ...(values ?? [])])
-
-          e.currentTarget.value = ""
-        }
-      }}
-    />
-  )
-}
-
-export function TagInputBadges() {
-  const { values: _values, onValueChange } = useTag()
-
-  const values = _values ?? []
-
-  return (
-    <>
-      {values.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2">
+    <InputGroup className="flex min-h-fit flex-col items-start gap-3">
+      {values?.length ? (
+        <div className="flex grow flex-wrap justify-start gap-2 p-2 pb-0">
           {values.map((tag, idx) => (
             <Badge key={idx}>
               {tag}{" "}
@@ -84,18 +54,46 @@ export function TagInputBadges() {
         </div>
       ) : null}
 
-      {values.length > 0 && (
-        <div className="flex justify-end">
-          <Button
-            variant={"link"}
-            size={"xs"}
-            className="text-primary no-underline!"
-            onClick={() => onValueChange?.([])}
-          >
-            Clear all
-          </Button>
-        </div>
-      )}
-    </>
+      <div
+        className={cn(
+          "flex w-full items-center justify-between gap-1 pe-2",
+          values?.length ? "pb-1" : ""
+        )}
+      >
+        <Input
+          {...inputProps}
+          placeholder="Enter your tag..."
+          className="bg-transparent! focus-visible:border-transparent! focus-visible:ring-3 focus-visible:ring-transparent!"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault()
+
+              if (!e.currentTarget.checkValidity()) {
+                e.currentTarget.reportValidity()
+
+                return
+              }
+
+              const value = (
+                inputProps.type === "number"
+                  ? e.currentTarget.valueAsNumber
+                  : e.currentTarget.value
+              ) as TTagValue
+              onValueChange?.([...new Set([value, ...(values ?? [])])])
+
+              e.currentTarget.value = ""
+            }
+          }}
+        />
+
+        <Button
+          size="icon-xs"
+          variant="destructive"
+          onClick={() => onValueChange?.([])}
+        >
+          <IconTrash />
+        </Button>
+      </div>
+    </InputGroup>
   )
 }

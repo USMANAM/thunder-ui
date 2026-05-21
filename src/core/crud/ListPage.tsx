@@ -39,7 +39,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { DataFilter } from "../data-filter/DataFilter"
 import { fieldsFromModuleMetadata } from "./FormPage"
 import { JSONSchemaToFields, type TField } from "../lib/jsonSchemaToFields"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -223,15 +222,6 @@ export function ListPage({ group, name }: IListPageProps) {
       <div className="flex min-h-0 flex-1 flex-col gap-3">
         {!isLoading ? (
           <div className="flex items-center justify-between gap-2">
-            <div className="max-w-xl grow">
-              <DataFilter
-                columnsConfig={[]}
-                onValueChange={(value) => {
-                  console.log(value)
-                }}
-              />
-            </div>
-
             <div className="flex items-center gap-3">
               {data?.results.length ? (
                 <DropdownMenu>

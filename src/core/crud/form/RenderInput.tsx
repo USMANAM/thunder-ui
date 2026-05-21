@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Dropdown } from "../../custom/Dropdown"
 import { Multiselect } from "../../custom/Multiselect"
-import { Tag, TagInput, TagInputBadges } from "../../custom/TagInput"
+import { Tag, TagInput } from "../../custom/TagInput"
 import { AvatarUpload } from "../../custom/AvatarUpload"
 import { ImageUpload } from "../../custom/ImageUpload"
 import { formatDateForInput, handleUpload } from "../../lib/utils"
@@ -265,7 +265,6 @@ export const renderField = ({
               type={field.type}
             >
               <TagInput />
-              <TagInputBadges />
             </Tag>
           )}
         />
