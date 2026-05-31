@@ -138,19 +138,21 @@ export function use<T>(
     }
   }, [count, SendRequest, options?.manualTrigger])
 
+  const refetch = React.useCallback(() => {
+    const controller = new AbortController()
+
+    SendRequest({ signal: controller.signal })
+
+    return {
+      controller,
+    }
+  }, [SendRequest])
+
   return {
     isLoading,
     data,
     error,
-    refetch: () => {
-      const controller = new AbortController()
-
-      SendRequest({ signal: controller.signal })
-
-      return {
-        controller,
-      }
-    },
+    refetch,
   } as
     | {
         isLoading: true

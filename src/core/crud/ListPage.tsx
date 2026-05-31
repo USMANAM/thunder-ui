@@ -167,7 +167,7 @@ export function ListPage({ group, name }: IListPageProps) {
   const Cards = cards[name as keyof typeof cards]
 
   const [view, setView] = React.useState(Cards ? "cards" : "table")
-  const [fieldsToFetch, setFieldsToFetch] = React.useState<string[]>([])
+  const [projection, setProjection] = React.useState<Record<string, 1>>({})
 
   const get = React.useMemo(
     () =>
@@ -181,15 +181,29 @@ export function ListPage({ group, name }: IListPageProps) {
               },
             })
           : undefined,
-        project: fieldsToFetch.length
-          ? Object.fromEntries(fieldsToFetch.map((f) => [f, 1]))
-          : undefined,
+        project: Object.keys(projection).length ? projection : undefined,
       }),
-    [_get, filters, fieldsToFetch, fields]
+    [_get, filters, projection, fields]
   )
   const { data, error, isLoading, refetch } = use(get, {
     manualTrigger: !!Cards, // if Cards component exists, we want to manually trigger the fetch after columns are set, to avoid fetching data twice
   })
+
+  const fetcher = React.useCallback(
+    (_: Record<string, 1>) => {
+      if (Object.keys(_).length === 0) {
+        refetch()
+
+        return
+      }
+
+      setProjection(_)
+
+      if (Object.keys(projection).length) refetch()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [refetch]
+  )
 
   const allowCreate = React.useMemo(
     () => ThunderSDK.isPermitted(ThunderSDK.getModule(name).create),
@@ -401,10 +415,7 @@ export function ListPage({ group, name }: IListPageProps) {
           <Cards
             isLoading={isLoading}
             data={data?.results ?? []}
-            fetcher={(fields) => {
-              setFieldsToFetch(fields)
-              refetch()
-            }}
+            fetcher={fetcher}
           />
         ) : isLoading ? (
           <TableSkeleton />

@@ -6,7 +6,7 @@ export const cards: Record<
   React.ComponentType<{
     isLoading: boolean
     data: any[]
-    fetcher: (fields: string[]) => void
+    fetcher: (projection: Record<string, 1>) => void
   }>
 > = {
   // Add your custom cards components here
