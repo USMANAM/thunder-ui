@@ -265,10 +265,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
               {/* Right Actions */}
               <div className="ml-auto flex items-center gap-3">
                 <Button
-                  className="hidden sm:block"
                   onClick={toggleTheme}
                   variant="outline"
-                  size="sm"
+                  size="icon"
                   aria-label="Toggle theme"
                 >
                   {resolvedTheme === "dark" ? (

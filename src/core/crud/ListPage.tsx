@@ -19,6 +19,7 @@ import {
   IconEdit,
   IconLayoutGrid,
   IconTable,
+  IconTableColumn,
   IconTrash,
   IconX,
   IconXMark,
@@ -117,7 +118,21 @@ const prepareColumns = (
               }).format(new Date(value))
           }
 
-          return getValue()
+          const value = getValue()
+
+          if (value instanceof Array) {
+            return value.join(", ")
+          }
+
+          if (typeof value === "object") {
+            return (
+              <pre className="max-h-40 overflow-auto">
+                {JSON.stringify(value, null, 2)}
+              </pre>
+            )
+          }
+
+          return value
         },
       }
     })
@@ -242,12 +257,12 @@ export function ListPage({ group, name }: IListPageProps) {
               </>
             ) : (
               <>
-                {data?.results.length ? (
+                {data?.results.length && !Cards ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       render={
-                        <Button variant="outline" className="max-w-fit">
-                          Visibility
+                        <Button variant="outline" size="icon">
+                          <IconTableColumn />
                         </Button>
                       }
                     ></DropdownMenuTrigger>

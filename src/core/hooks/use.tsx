@@ -13,6 +13,7 @@ type TRequester<T> = {
 type TUseOpts = {
   maxRetries?: number
   triggerTarget?: string
+  manualTrigger?: boolean
 }
 
 export function use<T>(
@@ -66,6 +67,8 @@ export function use<T>(
     options?.triggerTarget && document.getElementById(options.triggerTarget)
 
   React.useEffect(() => {
+    if (options?.manualTrigger) return
+
     if (triggerElement) {
       const observer = new IntersectionObserver(
         ([entry]) => {
@@ -85,12 +88,16 @@ export function use<T>(
         observer.disconnect()
       }
     }
-  }, [SendRequest, triggerElement])
+  }, [SendRequest, options?.manualTrigger, triggerElement])
 
   React.useEffect(() => {
     const controller = new AbortController()
 
-    const handleChange = () => SendRequest({ signal: controller.signal })
+    const handleChange = () => {
+      if (options?.manualTrigger) return
+
+      SendRequest({ signal: controller.signal })
+    }
 
     window.addEventListener("online", handleChange)
 
@@ -110,9 +117,18 @@ export function use<T>(
       _offInvalidate?.(setData)
       _offExpire?.(handleExpire)
     }
-  }, [SendRequest, _onInvalidate, _offInvalidate, _onExpire, _offExpire])
+  }, [
+    SendRequest,
+    _onInvalidate,
+    _offInvalidate,
+    _onExpire,
+    _offExpire,
+    options?.manualTrigger,
+  ])
 
   React.useEffect(() => {
+    if (options?.manualTrigger) return
+
     const controller = new AbortController()
 
     SendRequest({ signal: controller.signal })
@@ -120,26 +136,38 @@ export function use<T>(
     return () => {
       controller.abort()
     }
-  }, [count, SendRequest])
+  }, [count, SendRequest, options?.manualTrigger])
 
   return {
     isLoading,
     data,
     error,
+    refetch: () => {
+      const controller = new AbortController()
+
+      SendRequest({ signal: controller.signal })
+
+      return {
+        controller,
+      }
+    },
   } as
     | {
         isLoading: true
         data: null
         error: null
+        refetch: () => { controller: AbortController }
       }
     | {
         isLoading: false
         data: T
         error: null
+        refetch: () => { controller: AbortController }
       }
     | {
         isLoading: false
         data: null
         error: Error
+        refetch: () => { controller: AbortController }
       }
 }

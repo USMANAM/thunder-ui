@@ -60,13 +60,21 @@ JSONSchemaToFields.resolveRef = async (ref, field) => {
     return Object.fromEntries(fields.map((field) => [field, 1]))
   }
 
-  const { results } = (await ThunderSDK.getModule(ref).get({
-    query: {
-      project: createProjection(),
-    },
-  })) as {
-    results: any[]
-  }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { results } = await ThunderSDK.useCache(
+    async () =>
+      (await ThunderSDK.getModule(ref).get({
+        query: {
+          project: createProjection(),
+        },
+      })) as {
+        results: any[]
+      },
+    {
+      cacheKey: [ref, "get"],
+      cacheTTL: parseInt(import.meta.env.VITE_DEFAULT_CACHE_TTL ?? "1"),
+    }
+  )
 
   const resolveLabel = (item: any) => {
     if (field.refLabel instanceof Array) {
