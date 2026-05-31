@@ -146,6 +146,7 @@ export function ListPage({ group, name }: IListPageProps) {
   const navigate = useNavigate()
 
   const [filters, setFilters] = React.useState<TFilterValue>()
+  const [fields, setFields] = React.useState<TField[]>([])
 
   const _get = React.useCallback(
     (query: Record<string, unknown> = {}) => {
@@ -164,8 +165,19 @@ export function ListPage({ group, name }: IListPageProps) {
   )
 
   const get = React.useMemo(
-    () => _get({ filters: filters ? filterToMongo(filters) : undefined }),
-    [_get, filters]
+    () =>
+      _get({
+        filters: filters
+          ? filterToMongo(filters, {
+              typeResolver: (key) => {
+                const field = fields.find((v) => v.name === key)
+
+                return field?.ref ? "objectId" : undefined
+              },
+            })
+          : undefined,
+      }),
+    [_get, filters, fields]
   )
   const { data, error, isLoading } = use(get)
 
@@ -175,7 +187,6 @@ export function ListPage({ group, name }: IListPageProps) {
   )
 
   const metadata = React.useMemo(() => ThunderSDK.getMetadata(name), [name])
-  const [fields, setFields] = React.useState<TField[]>([])
 
   const table = useReactTable(
     React.useMemo(
@@ -233,8 +244,6 @@ export function ListPage({ group, name }: IListPageProps) {
   const Cards = cards[name as keyof typeof cards]
 
   const [view, setView] = React.useState(Cards ? "cards" : "table")
-
-  console.log(fields)
 
   return (
     <div className="relative flex h-full min-h-0 flex-1 flex-col gap-5">

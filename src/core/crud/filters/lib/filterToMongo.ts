@@ -91,7 +91,7 @@ export const filterToMongo = (
       key: string,
       value: any,
       operator: string
-    ) => TServerValueTypes
+    ) => TServerValueTypes | undefined
   }
 ) => {
   const mongoFilter: Record<string, any> = {}
