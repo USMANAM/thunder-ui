@@ -1,6 +1,5 @@
 import { Breadcrumb } from "@/core/layouts/shared/breadcrumb"
 import { useLayout } from "@/core/layouts/layout-provider"
-import type { TRouteObject } from "@/core/router"
 import { useTheme } from "@/components/theme-provider"
 import {
   IconArrowsExchange,
@@ -11,7 +10,6 @@ import {
   IconNotification,
   IconSun,
   IconUserCircle,
-  type TablerIcon,
 } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import Logo from "/logo.png"
@@ -30,7 +28,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { NavMenu } from "./nav-menu"
-import { allowDisplayRoute, appName, getNavRoutes } from "@/core/lib/utils"
+import { appName, getNavRoutes } from "@/core/lib/utils"
 import {
   DropdownMenu,
   DropdownMenuContent,
