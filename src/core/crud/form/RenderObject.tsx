@@ -3,7 +3,6 @@
 import React from "react"
 import type { TField } from "@/core/lib/jsonSchemaToFields"
 import { useFormContext } from "react-hook-form"
-import Field from "./RenderInput"
 import {
   FieldDescription,
   FieldError,
@@ -61,19 +60,6 @@ export default function RenderObject({ name, field }: TRenderObjectProp) {
             [name, subField.name].filter(Boolean).join(".")
           }
         />
-        {/* <FieldGroup>
-          {(field.fields ?? []).map((subField, index) => {
-            const fieldName = [name, subField.name].filter(Boolean).join(".")
-
-            return (
-              <Field
-                key={`${fieldName}_${index}`}
-                name={fieldName}
-                field={subField}
-              />
-            )
-          })}
-        </FieldGroup> */}
       </FieldSet>
     </FieldGroup>
   )
