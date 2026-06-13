@@ -12,7 +12,8 @@ import {
   IconUserCircle,
 } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
-import Logo from "/logo.png"
+import LogoDark from "/logo-dark.png"
+import LogoLight from "/logo-light.png"
 import { Link, useLocation } from "react-router"
 import React from "react"
 import {
@@ -76,7 +77,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const { data: me } = use(_me)
 
-  const { routes, subRoutes } = React.useMemo(() => getNavRoutes(router.routes), [router.routes])
+  const { routes, subRoutes } = React.useMemo(
+    () => getNavRoutes(router.routes),
+    [router.routes]
+  )
 
   const [, activeParent] = React.useMemo(
     () => location.pathname.split("/").filter(Boolean),
@@ -100,7 +104,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <SidebarMenuItem>
               <SidebarMenuButton className="rounded-md py-0! ring-transparent group-data-[collapsible=icon]:size-8! hover:bg-transparent! group-data-[collapsible=icon]:[&>img]:block">
                 <img
-                  src={Logo}
+                  src={resolvedTheme === "dark" ? LogoDark : LogoLight}
                   alt="Logo"
                   className="hidden h-5 w-auto shrink-0"
                 />
