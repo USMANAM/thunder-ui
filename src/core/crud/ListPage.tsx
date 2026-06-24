@@ -209,10 +209,12 @@ export function ListPage({ group, name }: IListPageProps) {
     [filters, isCard, project, sort, page]
   )
 
-  const queryHash = React.useMemo(() => query && hash(query), [query])
+  const countQuery = React.useMemo(() => ({ filters: query.filters }), [query])
+
+  const countQueryHash = React.useMemo(() => hash(countQuery), [countQuery])
 
   const count = ThunderSDK.useCaching(
-    [name, "count", queryHash],
+    [name, "count", countQueryHash],
     async ({ signal }) =>
       (await ThunderSDK.getModule(name).count({
         signal,
@@ -229,6 +231,8 @@ export function ListPage({ group, name }: IListPageProps) {
   } = use(count, {
     manualTrigger: isCard,
   })
+
+  const queryHash = React.useMemo(() => hash(query), [query])
 
   const get = ThunderSDK.useCaching(
     [name, view, queryHash],
