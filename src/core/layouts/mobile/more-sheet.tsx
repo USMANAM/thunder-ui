@@ -3,12 +3,15 @@ import { useNavigate } from "react-router"
 import {
   IconAlertCircle,
   IconArrowsExchange,
+  IconCheck,
   IconDotsCircleHorizontal,
+  IconLanguage,
   IconLogout,
   IconMoon,
   IconNotification,
   IconSun,
   IconUserCircle,
+  IconWorld,
 } from "@tabler/icons-react"
 import { ThunderSDK } from "thunder-sdk"
 
@@ -28,6 +31,7 @@ import { useLogout } from "@/core/protected"
 import { getAuthUrl, getInitials, transformImage } from "@/core/lib/utils"
 import { cn } from "@/lib/utils"
 import type { TNav } from "./bottom-tabs"
+import { useTranslation } from "react-i18next"
 
 export function MoreSheet({
   overflowItems,
@@ -40,6 +44,7 @@ export function MoreSheet({
   const [open, setOpen] = React.useState(false)
   const { resolvedTheme, setTheme } = useTheme()
   const logout = useLogout()
+  const { t, i18n } = useTranslation()
 
   const _me = React.useCallback(
     async ({ signal }: { signal?: AbortSignal }) => {
@@ -80,7 +85,9 @@ export function MoreSheet({
         }
       >
         <IconDotsCircleHorizontal className="size-5 shrink-0" />
-        <span className="text-[11px] leading-none font-medium">More</span>
+        <span className="text-[11px] leading-none font-medium">
+          {t("More")}
+        </span>
       </SheetTrigger>
 
       <SheetContent
@@ -88,7 +95,7 @@ export function MoreSheet({
         className="max-h-[85svh] gap-0 rounded-t-2xl pb-[env(safe-area-inset-bottom)]"
       >
         <SheetHeader className="gap-3 p-4">
-          <SheetTitle className="sr-only">Menu</SheetTitle>
+          <SheetTitle className="sr-only">{t("Menu")}</SheetTitle>
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11 rounded-lg">
               <AvatarImage src={transformImage(me?.image)} alt={me?.name} />
@@ -98,7 +105,7 @@ export function MoreSheet({
             </Avatar>
             <div className="grid flex-1 text-left leading-tight">
               <span className="truncate text-sm font-medium">
-                {me?.name ?? "Unnamed"}
+                {me?.name ?? t("Unnamed")}
               </span>
               <span className="truncate text-xs text-muted-foreground">
                 {me?.email ?? "N/A"}
@@ -142,8 +149,8 @@ export function MoreSheet({
             className="justify-start"
           >
             <IconUserCircle className="size-5 shrink-0" />
-            <span>Account</span>
-          </Button>
+            <span>{t("Account")}</span>
+          </button>
 
           <Button
             variant="ghost"
@@ -151,17 +158,35 @@ export function MoreSheet({
             onClick={() => handleNavigate("/select-tenant/#list")}
           >
             <IconArrowsExchange className="size-5 shrink-0" />
-            <span>Change tenant</span>
-          </Button>
+            <span>{t("Change tenant")}</span>
+          </SheetClose>
 
           <Button variant="ghost" className="justify-start">
             <IconNotification className="size-5 shrink-0" />
-            <span>Notifications</span>
-          </Button>
+            <span>{t("Notifications")}</span>
+          </button>
 
-          <Button
-            variant="ghost"
-            className="justify-start"
+          {/* change language */}
+          <button
+            type="button"
+            onClick={() =>
+              i18n.changeLanguage(i18n.language === "en" ? "ar" : "en")
+            }
+            className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent/60"
+          >
+            <div className="flex items-center gap-3">
+              <IconLanguage className="size-5 shrink-0" />
+              <span>
+                {i18n.language === "en" ? t("English") : t("Arabic")}
+              </span>
+            </div>
+
+            <IconArrowsExchange className="size-4 text-muted-foreground" />
+          </button>
+
+
+          <button
+            type="button"
             onClick={toggleTheme}
           >
             {resolvedTheme === "dark" ? (
@@ -169,8 +194,12 @@ export function MoreSheet({
             ) : (
               <IconMoon className="size-5 shrink-0" />
             )}
-            <span>{resolvedTheme === "dark" ? "Light mode" : "Dark mode"}</span>
-          </Button>
+            <span>
+              {resolvedTheme === "dark"
+                ? t("Light mode")
+                : t("Dark mode")}
+            </span>
+          </button>
         </div>
 
         <Separator />
@@ -182,7 +211,7 @@ export function MoreSheet({
             onClick={logout}
             aria-label="Logout"
           >
-            <IconLogout className="size-4" /> Log out
+            <IconLogout className="size-4" />   {t("Log out")}
           </Button>
         </div>
       </SheetContent>
