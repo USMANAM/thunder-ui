@@ -222,7 +222,7 @@ export function ListPage({ group, name }: IListPageProps) {
     [filters, subFilters, isCard, project, sort, page]
   )
 
-  const countQuery = React.useMemo(() => ({ filters: query.filters }), [query])
+  const countQuery = React.useMemo(() => ({ filters: query.filters, subFilters: query.subFilters }), [query])
 
   const countQueryHash = React.useMemo(() => hash(countQuery), [countQuery])
 
@@ -471,6 +471,7 @@ export function ListPage({ group, name }: IListPageProps) {
                 setFilters={setFilters}
                 setProject={setProject}
                 setSort={setSort}
+                setPage={setPage}
                 fetcher={fetcher}
                 selectedIds={selectedRows.map((v) => (v.original as any)._id)}
                 toggleSelect={(id) => {

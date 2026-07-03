@@ -12,6 +12,7 @@ export type TCardProps = {
   setFilters: React.Dispatch<React.SetStateAction<TFilters | undefined>>;
   setProject: React.Dispatch<React.SetStateAction<Record<string, 1 | -1>>>;
   setSort: React.Dispatch<React.SetStateAction<Record<string, 1 | -1>>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
   selectedIds: string[];
   toggleSelect: (id?: string) => void;
 };
