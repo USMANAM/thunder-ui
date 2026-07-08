@@ -11,10 +11,11 @@ import { ViewPage } from "@/core/crud/ViewPage"
 import Overview from "@/pages/overview"
 import { lists } from "@/overrides/crud/lists"
 import { allowDisplayRoute } from "./lib/utils"
-import { routes } from "@/overrides/routes"
+import { routes as overrideRoutes } from "@/overrides/routes"
 
 export type TRouteObject = {
   name?: string
+  priority?: number | (() => number)
   group?: string
   icon?: TablerIcon
   display?: boolean | (() => boolean)
@@ -22,12 +23,15 @@ export type TRouteObject = {
 } & RouteObject
 
 const moduleNames = Array.from(
-  new Set([...ThunderSDK.getModuleNames(), ...Object.keys(routes)])
+  new Set([
+    ...ThunderSDK.getModuleNames(),
+    ...Object.keys(overrideRoutes).filter((name) => !ThunderSDK.hasGroup(name)),
+  ])
 )
 
 const rawRoutes = moduleNames
   .map((name) => {
-    const overrideRoute = routes[name as keyof typeof routes]
+    const overrideRoute = overrideRoutes[name as keyof typeof overrideRoutes]
 
     if (overrideRoute && !overrideRoute.merge) {
       return overrideRoute
@@ -84,12 +88,16 @@ const rawRoutes = moduleNames
       path: name,
       icon: icons[name],
       group,
-      display: () =>
-        ThunderSDK.isPermitted(name, "get") ||
-        ThunderSDK.isPermitted(name, "create"),
       Component: () => <Outlet />,
       children,
       ...overrideRoute,
+      display: () => {
+        const permitted =
+          ThunderSDK.isPermitted(name, "get") ||
+          ThunderSDK.isPermitted(name, "create")
+
+        return permitted && allowDisplayRoute(overrideRoute?.display)
+      },
     }
   })
   .filter(Boolean) as TRouteObject[]
@@ -97,20 +105,20 @@ const rawRoutes = moduleNames
 export const coreRoutes = Object.entries(
   Object.groupBy(rawRoutes, (item) => item.group ?? "Other")
 ).map(([group, routes]) => {
+  const overrideRoute = overrideRoutes[group as keyof typeof overrideRoutes]
+
+  if (overrideRoute && !overrideRoute.merge) {
+    return overrideRoute
+  }
+
   routes = routes ?? []
 
   routes.push({
     path: "",
     Component: () => {
-      const displayable = routes.filter((route) =>
+      const indexRoute = routes.filter((route) =>
         allowDisplayRoute(route.display)
-      )
-      // Prefer the primary route over secondary "subscription/trigger" ones so
-      // e.g. the Orders group lands on the orders list, not subscriptions.
-      const indexRoute =
-        displayable.find(
-          (route) => !/subscription|trigger/i.test(String(route.path))
-        ) ?? displayable[0]
+      )[0]
 
       return <Navigate to={indexRoute?.path ?? "notFound"} />
     },
@@ -128,7 +136,14 @@ export const coreRoutes = Object.entries(
     icon: icons[group],
     Component: () => <Outlet />,
     children,
-    display: () => children.some((child) => allowDisplayRoute(child.display)),
+    ...overrideRoute,
+    display: () => {
+      const hasVisibleChild = children.some((child) =>
+        allowDisplayRoute(child.display)
+      )
+
+      return hasVisibleChild && allowDisplayRoute(overrideRoute?.display)
+    },
   } as TRouteObject
 })
 
