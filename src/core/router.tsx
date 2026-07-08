@@ -1,18 +1,22 @@
-import { Navigate, Outlet } from "react-router";
-import { ThunderSDK } from "thunder-sdk";
-import { IconLayoutGrid, IconWallet, type TablerIcon } from "@tabler/icons-react";
-import type { RouteObject } from "react-router";
+import { Navigate, Outlet } from "react-router"
+import { ThunderSDK } from "thunder-sdk"
+import {
+  IconLayoutGrid,
+  IconWallet,
+  type TablerIcon,
+} from "@tabler/icons-react"
+import type { RouteObject } from "react-router"
 
 import { icons } from "@/overrides/icons"
 import { ListPage } from "@/core/crud/ListPage"
 import { FormPage } from "@/core/crud/FormPage"
 import { ViewPage } from "@/core/crud/ViewPage"
 
-import Overview from "@/pages/overview";
-import { WalletCard } from "@/pages/wallet";
-import { lists } from "@/overrides/crud/lists";
-import { allowDisplayRoute } from "./lib/utils";
-import { routes } from "@/overrides/routes";
+import Overview from "@/pages/overview"
+import { WalletCard } from "@/pages/wallet"
+import { lists } from "@/overrides/crud/lists"
+import { allowDisplayRoute } from "./lib/utils"
+import { routes as overrideRoutes } from "@/overrides/routes"
 
 export type TRouteObject = {
   name?: string
@@ -166,5 +170,5 @@ coreRoutes.unshift(
     path: "wallet",
     icon: IconWallet,
     Component: () => <WalletCard balance={5} />,
-  },
-);
+  }
+)
