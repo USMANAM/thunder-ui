@@ -7,9 +7,14 @@ import {
   toolbarPlugin,
   BoldItalicUnderlineToggles,
   UndoRedo,
+  imagePlugin,
+  InsertImage,
+  Separator,
 } from "@mdxeditor/editor"
 
 import "@mdxeditor/editor/style.css"
+
+import { handleUpload } from "../lib/utils"
 
 export interface IMarkdownEditorProps {
   className?: string
@@ -31,11 +36,23 @@ export function MarkdownEditor({
         listsPlugin(),
         quotePlugin(),
         markdownShortcutPlugin(),
+        imagePlugin({
+          async imageUploadHandler(image: File) {
+            const { url } = await handleUpload(image, {
+              path: "postMedia",
+            })
+
+            return url!
+          },
+        }),
         toolbarPlugin({
           toolbarContents: () => (
             <div className="flex w-full gap-1 overflow-x-auto px-2 py-1">
               <UndoRedo />
+              <Separator />
               <BoldItalicUnderlineToggles />
+              <Separator />
+              <InsertImage />
             </div>
           ),
         }),
