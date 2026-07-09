@@ -23,7 +23,7 @@ export interface WalletCardProps {
   // currencyId?: string;
   // defaultCurrencyId?: string;
   // onCurrencyChange?: (id: string) => void;
-  balance: number;
+  // balance: number;
   balancePrefix?: string;
   /** Initial balance change shown in the pill before any live change. */
   defaultChange?: number;
@@ -48,7 +48,7 @@ export function WalletCard({
   // currencyId,
   // defaultCurrencyId,
   // onCurrencyChange,
-  balance,
+  // balance,
   balancePrefix = "$",
   defaultChange,
   defaultBalanceHidden = false,
@@ -65,7 +65,7 @@ export function WalletCard({
   // );
   const [balanceHidden, setBalanceHidden] = useState(defaultBalanceHidden);
 
-  const shownBalance = `${balancePrefix}${balance.toLocaleString(undefined, {
+  const shownBalance = `${balancePrefix}${(5).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -124,7 +124,7 @@ export function WalletCard({
             </span>
           </div>
         ) : (
-          <BalanceDelta balance={balance} initialChange={defaultChange} />
+          <BalanceDelta balance={5} initialChange={defaultChange} />
         )}
       </div>
 
