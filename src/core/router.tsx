@@ -169,6 +169,6 @@ coreRoutes.unshift(
     name: "Wallet",
     path: "wallet",
     icon: IconWallet,
-    Component: () => <WalletCard balance={5} />,
+    Component: () => <WalletCard />,
   }
 )
