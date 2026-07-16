@@ -3,7 +3,8 @@ import type { ThunderSDK } from "thunder-sdk";
 import {
   IconArrowNarrowUp,
   IconArrowDownDashed,
-  IconCalendar 
+  IconCalendar,
+  IconCalendarCheck 
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import type { ComponentType } from "react";
@@ -30,7 +31,7 @@ const TYPE_LABELS: Record<TWalletLedger["type"], string> = {
 
 function formatAmount(amount: number, type: TWalletLedger["type"], currency: string) {
   const sign = type === "credit" ? "+" : "-";
-  return `${sign}${(amount / 100).toLocaleString(undefined, {
+  return `${sign}${(Math.abs(amount) / 100).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })} ${currency.toUpperCase()}`;
@@ -107,6 +108,12 @@ export function TransactionHistory() {
 
   return (
     <div className="flex flex-col gap-3">
+      
+      {/* Header row */}
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-sm font-semibold text-foreground">{t("Transactions")}</h3>
+      </div>
+
       {/* Filter tabs */}
       <div className="flex items-center gap-1.5 flex-wrap">
         {presets.map(({ key, label }) => (
@@ -154,12 +161,6 @@ export function TransactionHistory() {
           )
         ))}
       </div>
-      {/* Header row */}
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-foreground">{t("Transactions")}</h3>
-      </div>
-
-      
 
       {/* Transaction list */}
       {isLoading && (
@@ -183,9 +184,13 @@ export function TransactionHistory() {
           {transactions.map((tx) => {
             const txType: TWalletLedger["type"] = tx.type === "credit" ? "credit" : "debit";
             const Icon = TYPE_ICONS[txType];
-            const description = typeof tx.description === "string"
+            let description = typeof tx.description === "string"
               ? tx.description
               : tx.purpose ?? tx.reference;
+            
+            if (tx.purpose === "wallet_transfer" && txType === "debit") {
+               description = `Transfer to ${((tx as any).oppositeTenant?.name || (tx as any).oppositeWallet) ?? "Wallet"}`;
+            }
 
             return (
               <div
@@ -212,7 +217,7 @@ export function TransactionHistory() {
                     {formatAmount(tx.amount, txType, tx.currency)}
                   </span>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-success">✓</span>
+                    <IconCalendarCheck  className="size-3.5 text-success" />
                     <span className="text-xs text-muted-foreground">
                       {formatDateForInput(tx.createdAt as TWalletLedger["createdAt"])}
                     </span>
