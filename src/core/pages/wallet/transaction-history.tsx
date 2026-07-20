@@ -3,8 +3,7 @@ import type { ThunderSDK } from "thunder-sdk";
 import {
   IconArrowNarrowUp,
   IconArrowDownDashed,
-  IconCalendar,
-  IconCalendarCheck 
+  IconCalendar
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 import type { ComponentType } from "react";
@@ -141,7 +140,7 @@ export function TransactionHistory() {
 
   return (
     <div className="flex flex-col gap-3">
-      
+
       {/* Header row */}
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-foreground">{t("Transactions")}</h3>
@@ -157,11 +156,10 @@ export function TransactionHistory() {
                   <button
                     type="button"
                     onClick={() => handlePreset("custom")}
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                      preset === "custom"
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${preset === "custom"
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card text-muted-foreground hover:text-foreground"
-                    }`}
+                      }`}
                   >
                     <IconCalendar className="h-3.5 w-3.5" />
                     {rangeLabel ?? label}
@@ -183,11 +181,10 @@ export function TransactionHistory() {
               key={key}
               type="button"
               onClick={() => handlePreset(key)}
-              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                preset === key
+              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${preset === key
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
             >
               {label}
             </button>
@@ -220,10 +217,10 @@ export function TransactionHistory() {
             let description = typeof tx.description === "string"
               ? tx.description
               : tx.purpose ?? tx.reference;
-            
+
             if (tx.purpose === "wallet_transfer" && txType === "debit") {
-               const target = (tx as any).oppositeTenant?.name || (tx as any).oppositeWallet || t("Wallet");
-               description = t("Transfer to {{target}}", { target });
+              const target = (tx as any).oppositeTenant?.name || (tx as any).oppositeWallet || t("Wallet");
+              description = t("Transfer to {{target}}", { target });
             }
 
             return (
@@ -249,7 +246,7 @@ export function TransactionHistory() {
                     {formatAmount(tx.amount, tx.currency, i18n.language)}
                   </span>
                   <div className="flex items-center gap-1.5">
-                    <IconCalendarCheck className="size-3.5 text-success" />
+                    <IconCalendar className="size-3.5" />
                     <span className="text-xs text-muted-foreground">
                       {formatDateForInput(tx.createdAt as TWalletLedger["createdAt"])}
                     </span>
