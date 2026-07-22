@@ -221,17 +221,16 @@ export function TransactionHistory({
                   <span className="truncate text-sm font-medium text-foreground">
                     {t(TYPE_LABEL_KEYS[txType])}
                   </span>
+
+                  <span className="text-xs text-muted-foreground font-mono">
+                    {tx.reference}
+                  <CopyButton value={tx.reference} />
+                  </span>
+                
                   <span className="truncate text-xs text-muted-foreground">
                     {description}
                   </span>
-                  {tx.reference && (
-                    <div className="flex items-center gap-0.5 mt-0.5">
-                      <span className="truncate text-xs text-muted-foreground/60 font-mono">
-                        {tx.reference}
-                      </span>
-                      <CopyButton value={tx.reference} />
-                    </div>
-                  )}
+
                 </div>
 
                 <div className="flex shrink-0 flex-col items-end">
